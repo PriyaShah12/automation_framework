@@ -1,0 +1,216 @@
+import json
+import jsonpath
+import requests
+import csv
+from cerberus import Validator
+from assertpy.assertpy import assert_that, soft_assertions
+from pprint import pprint
+import responses
+import pytest
+import jsonschema
+from jsonschema import validate
+from requests.exceptions import HTTPError
+
+class Base_Api_Page:
+
+    def get(self, url):
+        retries = 3
+        for n in range(retries):
+            try:
+                response = requests.get(url)
+                # response.raise_for_status()
+            except requests.exceptions.ConnectionError as err:
+                # eg, no internet
+                raise SystemExit(err)
+            except requests.exceptions.HTTPError as err:
+                # eg, url, server and other errors
+                raise SystemExit(err)
+            return response
+
+    # The dumps() function of the json module dumps a dictionary into JSON contents, and returns a JSON string.
+    def convert_python_dict_to_json_string(self, python_dict):
+        json_string = json.dumps(python_dict,sort_keys=True, ensure_ascii=False, indent=4),
+        return json_string
+
+    def store_json_string_to_a_file(self,file_name, json_string):
+        with open(file_name, 'w') as f:
+            f.write(json_string)
+
+    def conver_json_string_to_python_dictionary(self, json_string): #has to be response.text
+        python_dictionary = json.loads(json_string)
+        return(python_dictionary)
+
+    def check_status_code(self, response, code):
+        return response.status_code == code
+
+    def put(self, url, json_format_input_data, success_code):
+        response = requests.put(url, json_format_input_data)
+        value = self.check_status_code(response, success_code)
+        return value
+
+    def check_header_as_per_requirement(self, response, type, format):
+        return response.headers[type] == format
+
+    def delete(self, url):
+        response = requests.delete(url)
+        # Validation
+        try:
+            assert response.status_code == 204
+            print("Result :", response.status_code)
+            print("Status : Success")
+        except AssertionError:
+            print("Result :", response.status_code)
+            print("Status : Failed")
+        return response
+
+    def get_header(self, url):
+        x = requests.head(url)
+        # print the response headers (the HTTP headers of the requested file):
+        return (x.headers)
+
+    def get_response_content(self, response):
+        # Display Response Content
+        print("content = ", response.content)
+        return response.content
+
+
+    def reading_json_data_from_a_file(self, path):
+        with open(path, "r") as json_file:
+            data = json.load(json_file) #json.loads(): To parse JSON from String.json.load() to Parse JSON from a file.
+            return(data)
+
+    # json_data_path = ""  #give path of json data file
+    # @pytest.fixture(params= reading_json_data_from_a_file(json_data_path))
+    # def my_testdata(self, request):
+    #     data_test = request.param
+    #     return data_test
+    #
+    # @pytest.mark.usefixtures()
+    # def get_all_json_data_from_file(self, my_testdata):  #my_testdata param came from above method which is a dictionary
+    #     print("testdata is-->")
+
+
+
+    def get_response_and_check_status_code(self, url):
+        response = requests.get(url)
+        return response.status_code
+
+    def get_response_and_check_content_type_is_application_json(self, url):
+        response = requests.get(url)
+        return response.headers["Content-Type"] == "application/json"
+
+    def get_response_and_check_if_key_equals_value(self, url, key, value):
+        response = requests.get(url)
+        response_body = response.json()
+        return response_body[key] == value
+
+    def read_data_from_csv(self, csv_file):
+        test_data_from_csv = []
+        with open(csv_file, newline="") as csvfile:
+            data = csv.reader(csvfile, delimiter=",")
+            for row in data:
+                test_data_from_csv.append(row)
+        return test_data_from_csv
+
+    def download_an_image(self, url, filename):
+        response = requests.get(url)
+        with open(filename, 'wb') as f:
+            f.write(response.content)
+            print(f'{filename} is downloaded')
+
+    def iterate_through_python_dictionary(self, python_dict):
+        print("Print each key-value pair from JSON response")
+        for key, value in python_dict.items():
+            print(key, ":", value)
+            # return(key, ":", value)
+
+    def post_json_data(self, url, json_data):
+        response = requests.post(url, data=json_data, headers={'Content_Type': 'application/json'})
+        return response
+
+    def post_xml_data(self, url, xml_data):
+        response = requests.post(url, headers={"Content-Type": "application/xml"}, data=xml_data)
+        return response.headers["Content-Type"] == "application/xml", response.status_code == 200
+
+    def pretty_print(msg, indent=2):
+        pprint(msg, indent=indent)
+
+    def validate_schema(self, response, schema):
+        all_entries = json.loads(response.text)  # we will get list of dictionaries
+        # print(all_entries)
+        v = Validator(schema, require_all=True)
+        with soft_assertions():
+            for entry in all_entries:
+                is_valid = v.validate(entry)
+                return is_valid
+        # assert_that(is_valid, description=v.errors).is_true()
+
+    def validate_json_data_string_is_valid_or_not(self, json_data_string):
+        try:
+            json.loads(json_data_string)
+        except ValueError as err:
+            return False
+        return True
+
+    def validate_json_and_respective_schema(self, jsonData, schema_string): #pass json data after converting into python object using loads()
+        try:
+            validate(instance=jsonData, schema=schema_string)
+        except jsonschema.exceptions.ValidationError as err:
+            return False
+        return True
+
+    def add_responses_in_error_message(self, url, error_message):
+        responses.add(responses.GET, url, body=ValueError(error_message))
+        with pytest.raises(ValueError) as ve:
+            self.get(url)
+        return str(ve.value) == error_message
+
+    def get_all_values_of_a_dictionary(self, response, key, value):
+        response_python_dict = response.json()
+        all_entries_list = [entry[key] for entry in response_python_dict]
+        return value in all_entries_list
+
+    def add_new_data_from_file(self, url, file_path):
+        f = open(file_path, 'r')
+        request_json = json.loads(f.read())
+        response = requests.post(url, request_json)
+        return response.text
+
+    def fetch_data_from_response_after_post(self, response, fetch_value_of):
+        value = jsonpath.jsonpath(response.json(), fetch_value_of)
+        return value[0]
+
+    def check_element_in_a_dictionary(self, response, key, value):
+        response_python_dict = response.json()
+        all_entries_list = [entry[key]for entry in response_python_dict]
+        return value in all_entries_list
+
+    def get_value_after_update(self, response, value_of):
+        response_json = json.loads(response.text)
+        updated_list = jsonpath.jsonpath(response_json, value_of)
+        return (updated_list[0])
+
+    def fetch_data_from_csv_file_by_converting_into_python_dictionary(self, file_name):
+        with open(file_name, "r") as f:
+            csv_file = csv.DictReader(f)  # it will convert csv to python dictionary with key value pairs so that fetching becomes easy with keys
+
+            for line in csv_file:
+                print(line['email']) #in case we want to fetch email
+
+    def write_data_in_csv_format_after_making_changes_to_a_csv_file(self, reading_file, writing_file):
+        with open(reading_file, "r") as f:
+            csv_file = csv.DictReader(f)
+
+            with open(writing_file, "w") as f:
+                field_names = ["first_name", "last_name", "email"]  # list of all columns headers
+                # field_names = ["first_name", "last_name"] #IN CASE WE WANT ONLY 2 COLUMNS
+
+                csv_writer_file = csv.DictWriter(f, fieldnames=field_names, delimeter="\t")
+
+                csv_writer_file.writeheader()  # if we want header else ignore
+
+                for line in csv_file:
+                    # del line['email'] #in case we want to delete email while writing the new file
+                    csv_writer_file.writerow(line)
+
+
