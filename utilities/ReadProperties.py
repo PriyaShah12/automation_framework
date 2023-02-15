@@ -60,6 +60,12 @@ class configRead:
         return url
 
     @staticmethod
+    def ReadGoogleUrl():
+        url = config.get('google url', 'base_url')
+        print(url)
+        return url
+
+    @staticmethod
     def Read_DB_Config(filename=file_name, section='mysql'):
         """ Read database configuration file and return a dictionary object
                  :param filename: name of the configuration file
