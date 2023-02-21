@@ -4,13 +4,13 @@ from utilities.ReadProperties import configRead
 import time
 from configuration.test_data import login_data
 
-
+@pytest.mark.usefixtures("launch_url")
 class Test_Login:
 
     def test_login_page_title(self,init_driver):
         driver = init_driver
-        # driver.get(configRead.ReadUrl())
-        # driver.maximize_window()
+        driver.get(configRead.ReadUrl())
+        driver.maximize_window()
         act_title=driver.title
         if act_title=="Your store. Login":
             assert True

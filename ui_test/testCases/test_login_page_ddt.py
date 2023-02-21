@@ -5,7 +5,7 @@ from utilities import ExcelUtils
 from utilities import PathUtils
 import time
 
-
+@pytest.mark.usefixtures("launch_url")
 class Test_001_login:
     base_url=configRead.ReadUrl()
     path=".//TestData/DDT_testsheet.xlsx"

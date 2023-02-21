@@ -6,6 +6,7 @@ from ui_test.pageObjects.search_customer_page import searchcustomer
 import pytest
 import time
 
+@pytest.mark.usefixtures("launch_url")
 class Test_SearchCustomerByEmail_004:
     username=configRead.ReadUsername()
     password=configRead.Readpassword()

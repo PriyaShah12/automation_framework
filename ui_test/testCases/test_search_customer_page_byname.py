@@ -6,6 +6,7 @@ from configuration.test_data import search_customer
 import pytest
 import time
 
+@pytest.mark.usefixtures("launch_url")
 class Test_SearchCustomerByName_005:
     username=configRead.ReadUsername()
     password=configRead.Readpassword()
@@ -31,10 +32,17 @@ class Test_SearchCustomerByName_005:
         self.searchcust.setfirstname(search_customer.first_name_to_search_cust)
         self.searchcust.setlastname(search_customer.last_name_to_search_cust)
 
-
+        print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5")
         self.searchcust.clicksearch()
+        print("%%%%%%%%%%%%$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$%%%%%%%%%%%%%%%%%5")
+
         time.sleep(3)
-        status=self.searchcust.searchByName(search_customer.first_name_to_search_cust)
-        assert True==status
+        status=self.searchcust.searchByName(search_customer.first_name_to_search_cust + search_customer.last_name_to_search_cust)
+        print("Status----------->", status)
+        time.sleep(3)
+        if status == True:
+            assert True
+        else:
+            assert False
         self.driver.close()
 

@@ -5,6 +5,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.microsoft import IEDriverManager, EdgeChromiumDriverManager
 from utilities.ReadProperties import configRead
+import time
 
 # @pytest.fixture(scope="class", autouse=True)
 @pytest.fixture(autouse=True) #if we dont provide any scope then by default it is for all functions/methods whereever method name is passed as paramter
@@ -30,12 +31,20 @@ def init_driver(browser = "Chrome"):
     driver.quit()  #init_driver method will hold driver as its value and can be used by anymethod parameter in any file.
 
 
-@pytest.fixture(autouse=True)  #if scope is not given then by default is function scope.
+@pytest.fixture #(autouse=True)  #if scope is not given then by default is function scope.
 def launch_url(init_driver):
     base_url = configRead.ReadUrl()
     driver = init_driver
     driver.get(base_url)
     driver.maximize_window()
+
+@pytest.fixture
+def launch_google_maps_url(init_driver):
+    base_url = configRead.ReadGoogleUrl()
+    driver = init_driver
+    driver.get(base_url)
+    driver.maximize_window()
+    time.sleep(3)
 
 # @pytest.fixture
 # def order():

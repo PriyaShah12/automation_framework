@@ -1,8 +1,9 @@
 import configparser
 from configparser import ConfigParser
-config=configparser.RawConfigParser()
+# config=configparser.RawConfigParser()
+config = configparser.ConfigParser()
 import os
-file_name= ".//configuration//config.ini"
+file_name= r".//configuration//config.ini"
 config.read((os.path.relpath(file_name)))
 
 class configRead:
