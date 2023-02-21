@@ -49,9 +49,6 @@ class mysql_connect(Database_Class):
         conn.commit()
 
 
-
-
-
     def execute_a_query(self, query_to_execute):
         connection = self.connect()
         cursor = connection.cursor()
