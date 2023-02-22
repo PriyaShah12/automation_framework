@@ -11,10 +11,12 @@ class Test_Mysql_Db(mysql_connect):
         print("&&&&&&&&&&&&&&&&&&", connection)
         cursor = connection.cursor()
         print(cursor)
-        path= "./testData/LinksData.csv"
-        data= pd.read_csv(path, delim_whitespace=True, header=0,index_col=0)
-        df = pd.DataFrame(columns=['links'] )
-        print("*****", df)
+        path= r".//testData//LinksData.csv"
+        data = pd.read_csv(path, delimiter=",", usecols='LINKS')
+        print("my_csvdata------>>", data)
+
+        # df = pd.DataFrame(data, columns=['links'] )
+        # print("*****", df)
         # df.to_sql(con=connection,if_exists='append',index=False, name=)
 
 

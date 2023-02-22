@@ -36,7 +36,7 @@ class Base_Api_Page:
         with open(file_name, 'w') as f:
             f.write(json_string)
 
-    def conver_json_string_to_python_dictionary(self, json_string): #has to be response.text
+    def convert_json_string_to_python_dictionary(self, json_string): #has to be response.text
         python_dictionary = json.loads(json_string)
         return(python_dictionary)
 

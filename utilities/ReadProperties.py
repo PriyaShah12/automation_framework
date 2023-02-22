@@ -66,6 +66,7 @@ class configRead:
         print(url)
         return url
 
+
     @staticmethod
     def Read_DB_Config(filename=file_name, section='mysql'):
         """ Read database configuration file and return a dictionary object
