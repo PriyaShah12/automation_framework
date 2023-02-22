@@ -17,7 +17,7 @@ class Test_Google_Maps:
         time.sleep(5)
         soup = BeautifulSoup(driver.page_source, 'html.parser')
         # print(soup.prettify())
-        csv_file = open("google_reviews.csv", "w")
+        csv_file = open("./reports//google_reviews.csv", "w")
         csv_writer = csv.writer(csv_file)
         csv_writer.writerow(['Name'  , 'Rating',   'Rating time',  'Review'])
 
