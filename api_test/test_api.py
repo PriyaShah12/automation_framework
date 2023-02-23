@@ -3,6 +3,7 @@ import time
 import pytest
 from api_test.base_api_page import Base_Api_Page
 from utilities.ReadProperties import configRead
+import pandas as pd
 
 
 class Test_Api(Base_Api_Page):
@@ -63,14 +64,15 @@ class Test_Api(Base_Api_Page):
         all_records = python_dict['data']
         all_link =[]
         for record in all_records:
-
             my_links = record['avatar']
             all_link.append(my_links)
         print("&&&&&---->", all_link)
         with open('./testData/LinksData.csv', 'w') as f:
             csv_writer = csv.writer(f)
-            # csv_writer.writerow(all_link)
-            csv_writer.writerows([all_link])
+            csv_writer.writerow(['Links']) #written in list else will get comma separated values
+            for link in all_link:
+                csv_writer.writerow([link])
+
 
 
 

@@ -1,12 +1,28 @@
 import mysql.connector
+import pandas as pd
+
 from utilities.ReadProperties import configRead
 from mysql.connector import MySQLConnection, Error
 import json
 from abc import ABC, abstractmethod
+from sqlalchemy import create_engine
+
 
 class Database_Class(ABC):
     @abstractmethod
-    def connect(self):
+    def connect_using_mysql_connector(self):
+        pass
+
+    @abstractmethod
+    def connect_using_sqlalchemy(self):
+        pass
+
+    @abstractmethod
+    def read_csv_using_pandas(self, file_path, column_name, header_value, encoding='cp1252', sep=","):
+        pass
+
+    @abstractmethod
+    def insert_to_database_using_pandas(self, dtbase_connection, ifexists, indexvalue, tablename, df):
         pass
 
     @abstractmethod
@@ -24,9 +40,10 @@ class Database_Class(ABC):
     @abstractmethod
     def fetch_only_one_record(self, query):
         pass
+    # get database
 
 class mysql_connect(Database_Class):
-    def connect(self):
+    def connect_using_mysql_connector(self):
         try:
             db_config = configRead.Read_DB_Config()
             conn = None
@@ -40,6 +57,21 @@ class mysql_connect(Database_Class):
                 return conn
         except Error as e:
             print("Error while connecting to MySQL", e)
+
+    def connect_using_sqlalchemy(self):
+        my_conn = create_engine("mysql+mysqlconnector://root:root@localhost:3306/testdb")
+        return my_conn
+
+
+    def read_csv_using_pandas(self, file_path, column_name, header_value, encoding='cp1252', sep=","): #column_name should be list of values inside tuple
+        df = pd.read_csv(file_path, names=column_name, header=header_value, encoding= encoding, sep=sep)
+        return df
+
+
+    def insert_to_database_using_pandas(self,dtbase_connection, ifexists, indexvalue, tablename, df):
+        df.to_sql(con=dtbase_connection, if_exists=ifexists, index=indexvalue, name=tablename)
+
+
 
     def create_table(self, table_name):
         conn = self.connect()
