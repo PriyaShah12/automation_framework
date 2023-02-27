@@ -26,19 +26,19 @@ class Database_Class(ABC):
         pass
 
     @abstractmethod
-    def execute_a_query(self, query_to_execute):
+    def execute_a_query(self, query_to_execute, db_connection):
         pass
 
     @abstractmethod
-    def execute_multiple_queries(self, queries_to_execute, value):
+    def execute_multiple_queries(self, queries_to_execute, value, db_connection):
         pass
 
     @abstractmethod
-    def fetch_all_records(self, query):
+    def fetch_all_records(self, query, db_connection):
         pass
 
     @abstractmethod
-    def fetch_only_one_record(self, query):
+    def fetch_only_one_record(self, query, db_connection):
         pass
     # get database
 
@@ -73,16 +73,16 @@ class mysql_connect(Database_Class):
 
 
 
-    def create_table(self, table_name):
-        conn = self.connect()
+    def create_table(self, table_name, db_connection):
+        conn = db_connection
         cursor = conn.cursor()
         cursor.execute(f'drop table if exists {table_name}')
         cursor.execute(f"Create table {table_name}")
         conn.commit()
 
 
-    def execute_a_query(self, query_to_execute):
-        connection = self.connect()
+    def execute_a_query(self, query_to_execute, db_connection):
+        connection = db_connection
         cursor = connection.cursor()
         # global connection timeout arguments
         '''global_connect_timeout = 'SET GLOBAL connect_timeout=180'
@@ -106,8 +106,8 @@ class mysql_connect(Database_Class):
                 print("MySQL connection is closed")
 
 
-    def execute_multiple_queries(self, queries_to_execute, value):
-        connection = self.connect()
+    def execute_multiple_queries(self, queries_to_execute, value, db_connection):
+        connection = db_connection
         cursor = connection.cursor()
         try:
             result_iterator = cursor.execute(queries_to_execute, value) #value is list of tuples
@@ -121,8 +121,8 @@ class mysql_connect(Database_Class):
         print(cursor.rowcount, "rows printed")
 
 
-    def fetch_all_records(self, query):
-        connection = self.connect()
+    def fetch_all_records(self, query, db_connection):
+        connection = db_connection
         cursor = connection.cursor()
         cursor.execute(query)
         try:
@@ -139,8 +139,8 @@ class mysql_connect(Database_Class):
         finally:
             cursor.close()
 
-    def fetch_only_one_record(self, query):
-        connection = self.connect()
+    def fetch_only_one_record(self, query, db_connection):
+        connection = db_connection
         cursor = connection.cursor(buffered=True)
         cursor.execute(query)
         try:
