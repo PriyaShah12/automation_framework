@@ -26,6 +26,10 @@ class Database_Class(ABC):
         pass
 
     @abstractmethod
+    def read_from_database_using_pandas(self, dtbase_connection, query):
+        pass
+
+    @abstractmethod
     def execute_a_query(self, query_to_execute, db_connection):
         pass
 
@@ -40,7 +44,6 @@ class Database_Class(ABC):
     @abstractmethod
     def fetch_only_one_record(self, query, db_connection):
         pass
-    # get database
 
 class mysql_connect(Database_Class):
     def connect_using_mysql_connector(self):
@@ -52,7 +55,7 @@ class mysql_connect(Database_Class):
             if conn.is_connected():
                 db_Info = conn.get_server_info()
                 print("Connected to MySQL Server version:--> ", db_Info)
-                print("Connection established.")
+                print("Connection established with--->", conn)
 
                 return conn
         except Error as e:
@@ -71,14 +74,17 @@ class mysql_connect(Database_Class):
     def insert_to_database_using_pandas(self,dtbase_connection, ifexists, indexvalue, tablename, df):
         df.to_sql(con=dtbase_connection, if_exists=ifexists, index=indexvalue, name=tablename)
 
+    def read_from_database_using_pandas(self, dtbase_connection,my_query):
+        df = pd.read_sql(dtbase_connection,my_query)
+        return df
 
 
-    def create_table(self, table_name, db_connection):
-        conn = db_connection
-        cursor = conn.cursor()
-        cursor.execute(f'drop table if exists {table_name}')
-        cursor.execute(f"Create table {table_name}")
-        conn.commit()
+    def create_table(self, table_name):
+        db_conn = self.connect_using_mysql_connector()
+        cursor = db_conn.cursor()
+        cursor.execute(f'drop table if exists {table_name}(num int )')
+        cursor.execute(f"Create table {table_name}((num int )")
+        db_conn.commit()
 
 
     def execute_a_query(self, query_to_execute, db_connection):
