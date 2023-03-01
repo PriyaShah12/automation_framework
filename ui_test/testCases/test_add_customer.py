@@ -13,7 +13,7 @@ class Test_003_addcustomer:
     password=configRead.Readpassword()
     url=configRead.ReadUrl()
 
-    # @pytest.mark.sanity
+
     def test_addcustomer(self,init_driver):
         driver = init_driver
         self.lp = Login(driver)

@@ -6,12 +6,12 @@ from utilities import PathUtils
 import time
 import pandas as pd
 
+
 @pytest.mark.usefixtures("launch_url")
 class Test_001_login:
     base_url=configRead.ReadUrl()
     path=".//TestData/test_login_ddt.xlsx"
 
-    # @pytest.mark.skip
     def test_login_ddt(self, init_driver):
         driver = init_driver
         self.lp = Login(driver)
@@ -59,8 +59,6 @@ class Test_001_login:
                 time.sleep(2)
                 assert False
 
-
-    # @pytest.mark.skip
     def test_login_page_title_ddt(self,init_driver):
         driver = init_driver
         act_title = driver.title
@@ -69,7 +67,6 @@ class Test_001_login:
         else:
             assert False
 
-    # @pytest.mark.skip(reason="Run Later")
     def test_login_ddt_openpyxl(self,init_driver):
         driver=init_driver
         # self.lp= Login(driver)

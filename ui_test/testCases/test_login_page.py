@@ -19,7 +19,6 @@ class Test_Login:
             driver.close()
             assert False
 
-    # @pytest.mark.skip
     def test_login(self,init_driver):
         driver = init_driver
         driver.get(configRead.ReadUrl())
