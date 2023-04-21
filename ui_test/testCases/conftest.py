@@ -12,8 +12,8 @@ import time
 def init_driver(browser = "Chrome"):
     # global driver
     if browser == 'Chrome':
-        # s= Service(executable_path="C:\\Priya_Dev\\sourcecode\\NopCommerce\\drivers\\chromedriver.exe")
-        s = Service(ChromeDriverManager().install())
+        s= Service(executable_path="C:\\Priya_Dev\\sourcecode\\NopCommerce\\drivers\\chromedriver.exe")
+        # s = Service(ChromeDriverManager().install())
         driver = webdriver.Chrome(service=s)
     elif browser == 'Firefox':
         s = Service(executable_path=GeckoDriverManager().install())
@@ -30,13 +30,13 @@ def init_driver(browser = "Chrome"):
     yield driver
     driver.quit()  #init_driver method will hold driver as its value and can be used by anymethod parameter in any file.
 
-
-@pytest.fixture #(autouse=True)  #if scope is not given then by default is function scope.
-def launch_url(init_driver):
-    base_url = configRead.ReadUrl()
-    driver = init_driver
-    driver.get(base_url)
-    driver.maximize_window()
+#
+# @pytest.fixture #(autouse=True)  #if scope is not given then by default is function scope.
+# def launch_url(init_driver):
+#     base_url = configRead.ReadUrl()
+#     driver = init_driver
+#     driver.get(base_url)
+#     driver.maximize_window()
 
 @pytest.fixture
 def launch_google_maps_url(init_driver):
@@ -46,14 +46,15 @@ def launch_google_maps_url(init_driver):
     driver.maximize_window()
     time.sleep(3)
 
-# @pytest.fixture
-# def order():
-#     return []
-#
-# @pytest.fixture(autouse=True)
-# def append_first(order, init_driver):
-#     return order.append(use_fixture_before_all_methods)
-
+@pytest.fixture(scope='function', autouse=True)
+def use_fixture_before_all_methods(init_driver):
+    base_url = configRead.ReadUrl()
+    username = configRead.ReadUsername()
+    password = configRead.Readpassword()
+    driver = init_driver
+    driver.get(base_url)
+    driver.maximize_window()
+    return base_url, username, password, driver
 
 
 

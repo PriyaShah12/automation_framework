@@ -35,8 +35,6 @@ class AddCustomer(BasePage):
     textbox_admincomment_xpath="//textarea[@id='AdminComment']"
     button_save_xpath="//button[@name='save'][@type='submit']"
 
-    def __init__(self, driver):
-        self.driver=driver
 
     def menusearch(self):
         self.driver.find_element(By.XPATH,self.menusearchicon_xpath).click()

@@ -1,22 +1,24 @@
 import pytest
 from ui_test.pageObjects.login_page import Login
 from utilities.ReadProperties import configRead
-from utilities import ExcelUtils
 from utilities import PathUtils
+from utilities import ExcelUtils
 import time
 import pandas as pd
+import testData
 
 
-@pytest.mark.usefixtures("launch_url")
 class Test_001_login:
-    base_url=configRead.ReadUrl()
-    path=".//TestData/test_login_ddt.xlsx"
+    # path=".//testData/test_login_ddt_openpyxl.xlsx"
 
-    def test_login_ddt(self, init_driver):
-        driver = init_driver
+
+    @pytest.mark.skip
+    def test_login_ddt(self, use_fixture_before_all_methods):
+        base_url,username, password, driver = use_fixture_before_all_methods
         self.lp = Login(driver)
         time.sleep(3)
         func_name = Test_001_login.test_login_ddt.__name__
+        print(func_name)
         file = PathUtils.get_file(func_name)
         print("File Name-->", file)
         time.sleep(3)
@@ -59,28 +61,33 @@ class Test_001_login:
                 time.sleep(2)
                 assert False
 
-    def test_login_page_title_ddt(self,init_driver):
-        driver = init_driver
+    @pytest.mark.skip
+    def test_login_page_title_ddt(self,use_fixture_before_all_methods):
+        base_url,username, password, driver = use_fixture_before_all_methods
         act_title = driver.title
         if act_title == "Your store. Login":
             assert True
         else:
             assert False
 
-    def test_login_ddt_openpyxl(self,init_driver):
-        driver=init_driver
+    def test_login_ddt_openpyxl(self,use_fixture_before_all_methods):
+        base_url,username, password, driver = use_fixture_before_all_methods
         # self.lp= Login(driver)
         time.sleep(5)
-        self.rows=ExcelUtils.getRowCount(self.path, "Sheet1")
+        func_name = Test_001_login.test_login_ddt.__name__
+        print(func_name)
+        file = PathUtils.get_file(func_name)
+        print("File Name-->", file)
+        self.rows=ExcelUtils.getRowCount(file, "Sheet1")
         print("Number of rows:", self.rows)
         report=[]
         time.sleep(3)
         for r in range(2, self.rows+1):
-            driver.get(self.base_url)
+            driver.get(base_url)
             self.lp = Login(driver)
-            self.usrname = ExcelUtils.readData(self.path, 'Sheet1', r, 1)
-            self.pswd = ExcelUtils.readData(self.path, 'Sheet1', r, 2)
-            self.exp = ExcelUtils.readData(self.path, 'Sheet1', r, 3)
+            self.usrname = ExcelUtils.readData(file, 'Sheet1', r, 1)
+            self.pswd = ExcelUtils.readData(file, 'Sheet1', r, 2)
+            self.exp = ExcelUtils.readData(file, 'Sheet1', r, 3)
             time.sleep(3)
             self.lp.setUserName(self.usrname)
             self.lp.setPassword(self.pswd)

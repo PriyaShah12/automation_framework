@@ -9,17 +9,14 @@ from selenium.webdriver.common.by import By
 from configuration.test_data import add_customer
 
 class Test_003_addcustomer:
-    username=configRead.ReadUsername()
-    password=configRead.Readpassword()
-    url=configRead.ReadUrl()
 
 
-    def test_addcustomer(self,init_driver):
-        driver = init_driver
+    def test_addcustomer(self,use_fixture_before_all_methods):
+        base_url, username, password, driver = use_fixture_before_all_methods
         self.lp = Login(driver)
         self.addcust = AddCustomer(driver)
-        self.lp.setUserName(self.username)
-        self.lp.setPassword(self.password)
+        self.lp.setUserName(username)
+        self.lp.setPassword(password)
         self.lp.clickLogin()
 
         self.addcust.clickcustomer()

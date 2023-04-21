@@ -4,7 +4,10 @@ from utilities.ReadProperties import configRead
 from mysql.connector import MySQLConnection, Error
 import json
 from abc import ABC, abstractmethod
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
+import sqlalchemy
+
+
 
 
 
@@ -56,15 +59,14 @@ class mysql_connect(Database_Class):
                 db_Info = conn.get_server_info()
                 print("Connected to MySQL Server version:--> ", db_Info)
                 print("Connection established with--->", conn)
-
+                print(conn)
                 return conn
         except Error as e:
             print("Error while connecting to MySQL", e)
 
     def connect_using_sqlalchemy(self):
-
         # my_conn = create_engine("mysql+pymysql://root:root@localhost:3306/testdb")
-        my_conn = create_engine("mysql+mysqlconnector://root:root@localhost:3306/testdb")
+        my_conn = create_engine(f"mysql+pymysql://root:root@localhost:3306/testdb", echo=True, future=True)
         return my_conn
 
 
@@ -72,18 +74,16 @@ class mysql_connect(Database_Class):
         df = pd.read_csv(file_path, names=column_name, header=header_value, encoding= encoding, sep=sep)
         return df
 
-
-    def insert_to_database_using_pandas(self,dtbase_connection, ifexists, indexvalue, tablename, schema, df):
-        df.to_sql(con=dtbase_connection, if_exists=ifexists, index=indexvalue, name=tablename, schema=schema)
-
+    def insert_to_database_using_pandas(self,dtbase_connection, ifexists, indexvalue, tablename, df):
+        df.to_sql(con=dtbase_connection, if_exists=ifexists, index=indexvalue, name=tablename)
         df.to_sql()
-
         # df.to_sql(con=dtbase_connection, if_exists=ifexists, index=indexvalue, name=tablename)
+
+
 
     def read_from_database_using_pandas(self, dtbase_connection,my_query):
         df = pd.read_sql(dtbase_connection,my_query)
         return df
-
 
     def create_table(self, table_name):
         db_conn = self.connect_using_mysql_connector()

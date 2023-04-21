@@ -6,29 +6,23 @@ from configuration.test_data import search_customer
 import pytest
 import time
 
-@pytest.mark.usefixtures("launch_url")
+
 class Test_SearchCustomerByName_005:
-    username=configRead.ReadUsername()
-    password=configRead.Readpassword()
-    url=configRead.ReadUrl()
 
     @pytest.mark.regression
-    def test_searchbyname(self,init_driver):
-        self.driver=init_driver
-        self.driver.get(self.url)
-        self.driver.maximize_window()
-
-        self.lp=Login(self.driver)
-        self.lp.setUserName(self.username)
-        self.lp.setPassword(self.password)
+    def test_searchbyname(self,use_fixture_before_all_methods):
+        base_url, username, password, driver = use_fixture_before_all_methods
+        self.lp = Login(driver)
+        self.lp.setUserName(username)
+        self.lp.setPassword(password)
         self.lp.clickLogin()
         time.sleep(5)
 
-        self.addcust=AddCustomer(self.driver)
+        self.addcust=AddCustomer(driver)
         self.addcust.clickcustomer()
         self.addcust.clicksublinkcustomer()
 
-        self.searchcust=searchcustomer(self.driver)
+        self.searchcust=searchcustomer(driver)
         self.searchcust.setfirstname(search_customer.first_name_to_search_cust)
         self.searchcust.setlastname(search_customer.last_name_to_search_cust)
 
@@ -38,5 +32,5 @@ class Test_SearchCustomerByName_005:
 
         if status!= "None":
             assert True
-        self.driver.close()
+
 

@@ -6,18 +6,14 @@ from ui_test.pageObjects.search_customer_page import searchcustomer
 import pytest
 import time
 
-@pytest.mark.usefixtures("launch_url")
+
 class Test_SearchCustomerByEmail_004:
-    username=configRead.ReadUsername()
-    password=configRead.Readpassword()
-    url=configRead.ReadUrl()
 
-
-    def test_searchbyemail(self,init_driver):
-        driver=init_driver
-        self.lp=Login(driver)
-        self.lp.setUserName(self.username)
-        self.lp.setPassword(self.password)
+    def test_searchbyemail(self,use_fixture_before_all_methods):
+        base_url, username, password, driver = use_fixture_before_all_methods
+        self.lp = Login(driver)
+        self.lp.setUserName(username)
+        self.lp.setPassword(password)
         self.lp.clickLogin()
         time.sleep(5)
         self.addcust=AddCustomer(driver)

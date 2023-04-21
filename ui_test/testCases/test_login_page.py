@@ -1,39 +1,33 @@
+from selenium import webdriver
 import pytest
 from ui_test.pageObjects.login_page import Login
 from utilities.ReadProperties import configRead
 import time
-from configuration.test_data import login_data
 
-@pytest.mark.usefixtures("launch_url")
-class Test_Login:
+class Test_001_login:
 
-    def test_login_page_title(self,init_driver):
-        driver = init_driver
-        driver.get(configRead.ReadUrl())
-        driver.maximize_window()
-        act_title=driver.title
-        if act_title=="Your store. Login":
+    def test_homepagetitle(self,use_fixture_before_all_methods):
+        base_url,username, password, driver = use_fixture_before_all_methods
+        act_title ="Your store. Login"
+        if driver.title == act_title:
             assert True
-            driver.close()
         else:
-            driver.close()
+            # driver.save_screenshot(".\\Screenshots\\"+"test_homepagetitle.png")
             assert False
 
-    def test_login(self,init_driver):
-        driver = init_driver
-        driver.get(configRead.ReadUrl())
-        driver.maximize_window()
+
+    def test_login(self, use_fixture_before_all_methods):
+        base_url,username, password, driver = use_fixture_before_all_methods
         self.lp = Login(driver)
-        self.lp.setUserName(configRead.ReadUsername())
-        self.lp.setPassword(configRead.Readpassword())
+        self.lp.setUserName(username)
+        self.lp.setPassword(password)
         self.lp.clickLogin()
         time.sleep(6)
-
-        act_title = driver.title
-        if act_title == login_data.title:
+        actual_title = "Dashboard / nopCommerce administration"
+        if driver.title == actual_title:
             assert True
-            driver.close()
         else:
-           assert False
+            assert False
+
 
 

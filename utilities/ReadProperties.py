@@ -1,17 +1,14 @@
 import configparser
-from configparser import ConfigParser
-# config=configparser.RawConfigParser()
 config = configparser.ConfigParser()
 import os
-file_name= r".//configuration//config.ini"
-config.read((os.path.relpath(file_name)))
+file_name= r'..\\configuration\\config.ini'
+path = config.read(os.path.join(os.path.abspath(os.path.dirname(__file__)), file_name))
 
 class configRead:
 
     @staticmethod
     def ReadUrl():
         url=config.get('common Info', 'base_url')
-        print(url)
         return url
 
     @staticmethod
