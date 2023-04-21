@@ -72,10 +72,8 @@ class mysql_connect(Database_Class):
         df = pd.read_csv(file_path, names=column_name, header=header_value, encoding= encoding, sep=sep)
         return df
 
-
     def insert_to_database_using_pandas(self,dtbase_connection, ifexists, indexvalue, tablename, schema, df):
         df.to_sql(con=dtbase_connection, if_exists=ifexists, index=indexvalue, name=tablename, schema=schema)
-
         df.to_sql()
 
         # df.to_sql(con=dtbase_connection, if_exists=ifexists, index=indexvalue, name=tablename)
@@ -83,7 +81,6 @@ class mysql_connect(Database_Class):
     def read_from_database_using_pandas(self, dtbase_connection,my_query):
         df = pd.read_sql(dtbase_connection,my_query)
         return df
-
 
     def create_table(self, table_name):
         db_conn = self.connect_using_mysql_connector()
