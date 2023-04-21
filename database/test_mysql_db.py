@@ -5,8 +5,7 @@ from database.base_db_page import mysql_connect
 
 
 class Test_Mysql_Db(mysql_connect):
-
-
+    
     @pytest.mark.skip
     def test_connect_db(self):
         connection = self.connect_using_mysql_connector()
@@ -23,7 +22,6 @@ class Test_Mysql_Db(mysql_connect):
 
 
     @pytest.mark.skip
-
     def test_insert_apis_into_database(self):
         my_conn = self.connect_using_sqlalchemy()
         df = self.read_csv_using_pandas(r".//testData//LinksData.csv", ['Links'], None)
