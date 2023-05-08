@@ -46,16 +46,11 @@ class BasePage():
         return list_of_elements
 
     def wait_until_an_element_present(self, by_locator):
-        # print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-        # elementList = self.driver.find_elements(*by_locator)
-        # print("########################################")
-        # print(elementList)
         element = self.wait.until(EC.presence_of_element_located(by_locator))
         if element == "":
             self.driver.refresh()
             element = self.wait.until(EC.presence_of_element_located(by_locator))
         return element
-
 
 
     """This method will wait for an element until it is enabled to click"""

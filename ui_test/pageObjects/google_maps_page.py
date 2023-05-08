@@ -8,11 +8,12 @@ from ui_test.pageObjects.base_page import BasePage
 
 class Google_Maps(BasePage):
 
-    review_rating_xpath = (By.XPATH, "//div[@class='skqShb']//div[@role='button']")
+    review_rating_xpath = (By.XPATH, "//div[@class='LRkQ2']//div[contains(text(),'Reviews')]")
     all_reviews_text_xpath = (By.XPATH, "//div[starts-with(@id, 'Ch')]//span[2]")
     more_button_in_reviews = (By.XPATH, "//button[@class='w8nwRe kyuRq']")
 
     def click_review(self):
+        print("***********************")
         ele = self.wait_until_an_element_present(self.review_rating_xpath)
         ele.click()
 

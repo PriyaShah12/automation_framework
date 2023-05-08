@@ -38,15 +38,24 @@ def init_driver(browser = "Chrome"):
 #     driver.get(base_url)
 #     driver.maximize_window()
 
-@pytest.fixture
+# @pytest.fixture
+# def launch_google_maps_url(init_driver):
+#     base_url = configRead.ReadGoogleUrl()
+#     driver = init_driver
+#     driver.get(base_url)
+#     driver.maximize_window()
+#     time.sleep(3)
+
+@pytest.fixture(scope='function', autouse=False)
 def launch_google_maps_url(init_driver):
     base_url = configRead.ReadGoogleUrl()
     driver = init_driver
     driver.get(base_url)
     driver.maximize_window()
     time.sleep(3)
+    return driver
 
-@pytest.fixture(scope='function', autouse=True)
+@pytest.fixture(scope='function', autouse=False)
 def use_fixture_before_all_methods(init_driver):
     base_url = configRead.ReadUrl()
     username = configRead.ReadUsername()

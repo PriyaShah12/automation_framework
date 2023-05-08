@@ -7,19 +7,18 @@ import time
 from configuration.test_data import login_data
 from bs4 import BeautifulSoup
 
-@pytest.mark.usefixtures('launch_google_maps_url')
 class Test_Google_Maps:
 
-    def test_get_url(self,init_driver):
-        driver = init_driver
+    def test_get_url(self,launch_google_maps_url):
+        driver = launch_google_maps_url
         self.gp = Google_Maps(driver)
         self.gp.click_review()
         time.sleep(5)
         soup = BeautifulSoup(driver.page_source, 'html.parser')
         # print(soup.prettify())
-        csv_file = open("./reports//google_reviews.csv", "w")
+        csv_file = open("./../../reports//google_reviews.csv", "w")
         csv_writer = csv.writer(csv_file)
-        csv_writer.writerow(['Name'  , 'Rating',   'Rating time',  'Review'])
+        csv_writer.writerow(['Name', 'Rating', 'Rating time', 'Review'])
 
         last_height = driver.execute_script("return document.body.scrollHeight")
         while True:  # Scroll down to bottom
