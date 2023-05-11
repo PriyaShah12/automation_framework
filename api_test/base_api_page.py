@@ -79,18 +79,6 @@ class Base_Api_Page:
             data = json.load(json_file) #json.loads(): To parse JSON from String.json.load() to Parse JSON from a file.
             return(data)
 
-    # json_data_path = ""  #give path of json data file
-    # @pytest.fixture(params= reading_json_data_from_a_file(json_data_path))
-    # def my_testdata(self, request):
-    #     data_test = request.param
-    #     return data_test
-    #
-    # @pytest.mark.usefixtures()
-    # def get_all_json_data_from_file(self, my_testdata):  #my_testdata param came from above method which is a dictionary
-    #     print("testdata is-->")
-
-
-
     def get_response_and_check_status_code(self, url):
         response = requests.get(url)
         return response.status_code
