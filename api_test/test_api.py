@@ -1,4 +1,6 @@
 import csv
+import os.path
+
 from api_test.base_api_page import Base_Api_Page
 from utilities.ReadProperties import configRead
 
@@ -86,7 +88,9 @@ class Test_Api(Base_Api_Page):
             all_first_name.append(first_name)
             all_last_name.append(last_name)
             all_email.append(email)
-        with open('./..//testData//LinksData.csv', 'w', newline="") as f:
+        path = os.path.abspath('./..//automation_framework//testData//LinksData.csv')
+        with open(path, 'w', newline="") as f:
+        # with open('./..//testData//LinksData.csv', 'w', newline="") as f:
             csv_writer = csv.writer(f)
             csv_writer.writerow(['First_Name', 'Last_Name', 'Emails', 'Links'])  # written in list else will get comma separated values
             for i in range(len(all_first_name)):

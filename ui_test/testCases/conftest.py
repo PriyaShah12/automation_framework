@@ -67,4 +67,3 @@ def use_fixture_before_all_methods(init_driver):
 
 
 
-
