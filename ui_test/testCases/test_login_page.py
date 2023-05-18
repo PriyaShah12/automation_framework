@@ -4,7 +4,7 @@ from ui_test.pageObjects.login_page import Login
 from utilities.ReadProperties import configRead
 import time
 
-pytest.mark.usefixtures("use_fixture_before_all_methods")
+# pytest.mark.usefixtures("use_fixture_before_all_methods")
 class Test_001_login:
 
     def test_homepagetitle(self, use_fixture_before_all_methods):
@@ -13,7 +13,6 @@ class Test_001_login:
         if driver.title == act_title:
             assert True
         else:
-            # driver.save_screenshot(".\\Screenshots\\"+"test_homepagetitle.png")
             assert False
 
 

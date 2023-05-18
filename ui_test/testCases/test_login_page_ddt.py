@@ -1,18 +1,12 @@
-import pytest
 from ui_test.pageObjects.login_page import Login
-from utilities.ReadProperties import configRead
 from utilities import PathUtils
 from utilities import ExcelUtils
 import time
 import pandas as pd
-import testData
 
 
 class Test_001_login:
-    # path=".//testData/test_login_ddt_openpyxl.xlsx"
 
-
-    @pytest.mark.skip
     def test_login_ddt(self, use_fixture_before_all_methods):
         base_url,username, password, driver = use_fixture_before_all_methods
         self.lp = Login(driver)
@@ -61,7 +55,6 @@ class Test_001_login:
                 time.sleep(2)
                 assert False
 
-    @pytest.mark.skip
     def test_login_page_title_ddt(self,use_fixture_before_all_methods):
         base_url,username, password, driver = use_fixture_before_all_methods
         act_title = driver.title

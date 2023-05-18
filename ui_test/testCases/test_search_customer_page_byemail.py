@@ -1,9 +1,7 @@
 from ui_test.pageObjects.login_page import Login
 from ui_test.pageObjects.add_customer import AddCustomer
-from utilities.ReadProperties import configRead
 from configuration.test_data import search_customer
 from ui_test.pageObjects.search_customer_page import searchcustomer
-import pytest
 import time
 
 

@@ -90,7 +90,6 @@ class Test_Api(Base_Api_Page):
             all_email.append(email)
         path = os.path.abspath('./..//automation_framework//testData//LinksData.csv')
         with open(path, 'w', newline="") as f:
-        # with open('./..//testData//LinksData.csv', 'w', newline="") as f:
             csv_writer = csv.writer(f)
             csv_writer.writerow(['First_Name', 'Last_Name', 'Emails', 'Links'])  # written in list else will get comma separated values
             for i in range(len(all_first_name)):

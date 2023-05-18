@@ -10,7 +10,6 @@ from configuration.test_data import add_customer
 
 class Test_003_addcustomer:
 
-
     def test_addcustomer(self,use_fixture_before_all_methods):
         base_url, username, password, driver = use_fixture_before_all_methods
         self.lp = Login(driver)

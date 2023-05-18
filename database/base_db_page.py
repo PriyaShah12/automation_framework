@@ -17,10 +17,6 @@ class Database_Class(ABC):
     def connect_using_sqlalchemy(self):
         pass
 
-    # @abstractmethod
-    # def read_csv_using_pandas(self, file_path, column_name, header_value, encoding='cp1252', sep=","):
-    #     pass
-
     @abstractmethod
     def read_csv_using_pandas(self, file_path, encoding='cp1252', sep=","):
         pass
@@ -49,6 +45,7 @@ class Database_Class(ABC):
     def fetch_only_one_record(self, query, db_connection):
         pass
 
+
 class mysql_connect(Database_Class):
     def connect_using_mysql_connector(self):
         try:
@@ -66,31 +63,20 @@ class mysql_connect(Database_Class):
             print("Error while connecting to MySQL", e)
 
     def connect_using_sqlalchemy(self):
-
-        # my_conn = create_engine("mysql+pymysql://root:root@localhost:3306/testdb")
         my_conn = create_engine(f'mysql+mysqlconnector://root:root@localhost:3306/testdb')
         return my_conn
-
-
-    # def read_csv_using_pandas(self, file_path, column_name, header_value, encoding='cp1252', sep=","): #column_name should be list of values inside tuple
-    #     df = pd.read_csv(file_path, names=column_name, header=header_value, encoding= encoding, sep=sep)
-    #     return df
 
     def read_csv_using_pandas(self, file_path, encoding='cp1252', sep=","): #column_name should be list of values inside tuple
         df = pd.read_csv(file_path, encoding= encoding, sep=sep)
         return df
 
-
     def insert_to_database_using_pandas(self,dtbase_connection, ifexists, indexvalue, tablename, df):
         df.to_sql(con=dtbase_connection, if_exists=ifexists, index=indexvalue, name=tablename)
         print("Inserted to DB***")
-        # df.to_sql()
-        # df.to_sql(con=dtbase_connection, if_exists=ifexists, index=indexvalue, name=tablename)
 
     def read_from_database_using_pandas(self, dtbase_connection,my_query):
         df = pd.read_sql(dtbase_connection,my_query)
         return df
-
 
     def create_table(self, table_name):
         db_conn = self.connect_using_mysql_connector()
@@ -98,7 +84,6 @@ class mysql_connect(Database_Class):
         cursor.execute(f'drop table if exists {table_name}(num int )')
         cursor.execute(f"Create table {table_name}((num int )")
         db_conn.commit()
-
 
     def execute_a_query(self, query_to_execute, db_connection):
         connection = db_connection
@@ -124,7 +109,6 @@ class mysql_connect(Database_Class):
                 connection.close()
                 print("MySQL connection is closed")
 
-
     def execute_multiple_queries(self, queries_to_execute, value, db_connection):
         connection = db_connection
         cursor = connection.cursor()
@@ -138,7 +122,6 @@ class mysql_connect(Database_Class):
         except mysql.connector.Error as error:
             print("Failed to insert record into Laptop table {}".format(error))
         print(cursor.rowcount, "rows printed")
-
 
     def fetch_all_records(self, query, db_connection):
         connection = db_connection

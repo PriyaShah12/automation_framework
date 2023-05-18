@@ -9,7 +9,7 @@ import responses
 import pytest
 import jsonschema
 from jsonschema import validate
-from requests.exceptions import HTTPError
+
 
 class Base_Api_Page:
 
